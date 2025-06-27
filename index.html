@@ -324,14 +324,14 @@
             <img src="https://i.ibb.co/ZR0d1xTz/Gemini-Generated-Image-b0k237b0k237b0k2.png" alt="Profile Picture" class="profile-img">
 
             <!-- Name & Profession -->
-            <h1 class="name" id="profileName">Chandra</h1>
+            <h1 class="name" id="profileName">chandra</h1>
             <p class="profession" id="professionText">DGM - Ashokleyland</p>
-            <p class="tagline" id="profileTagline">Innovation distinguishes between a leader and a follower</p>
+            <p class="tagline" id="profileTagline">"Innovation distinguishes between a leader and a follower"</p>
             
             <!-- Contact Information -->
             <div class="contact-info w-full mb-6">
                 <p><i class="fas fa-phone"></i> <span id="phoneNumber" class="cursor-pointer">+91 9840533766</span></p>
-                <p><i class="fas fa-envelope"></i> <span id="emailAddress" class="cursor-pointer">Chandra@ashokleyland.com</span></p>
+                <p><i class="fas fa-envelope"></i> <span id="emailAddress" class="cursor-pointer">chandra@ashokleyland.com</span></p>
             </div>
             
             <!-- Main Action Buttons -->
@@ -347,7 +347,10 @@
                 <button class="action-button secondary" id="addToContacts">
                     <i class="fas fa-address-book"></i> Add to Contacts
                 </button>
-                <!-- Share Profile button removed as requested for Portal Lite -->
+                <!-- Share Profile button re-added -->
+                <button class="action-button secondary" id="shareProfile">
+                    <i class="fas fa-share-alt"></i> Share Profile
+                </button>
             </div>
         </div>
 
@@ -356,13 +359,13 @@
             <button class="back-button" id="backButtonFromAbout">
                 <i class="fas fa-arrow-left"></i> Back
             </button>
-            <h2 class="text-2xl font-bold mt-12 mb-4 text-white">About Chandra</h2>
+            <h2 class="text-2xl font-bold mt-12 mb-4 text-white">About chandra</h2>
             <div class="about-content w-full px-4 text-gray-300">
                 <p class="mb-4">
-                    Chandra is a seasoned professional currently serving as GM at Ashokleyland, bringing extensive experience in leadership and operational excellence. With a strong track record in the automotive industry, he is dedicated to driving innovation and achieving strategic objectives.
+                    chandra is a seasoned professional currently serving as DGM at Ashokleyland, bringing extensive experience in leadership and operational excellence. With a strong track record in the automotive industry, he is dedicated to driving innovation and achieving strategic objectives.
                 </p>
                 <p>
-                    Beyond his professional endeavors, Chandra is passionate about leveraging technology for practical solutions. He believes in fostering strong connections and continually exploring new opportunities for growth and collaboration.
+                    Beyond his professional endeavors, chandra is passionate about leveraging technology for practical solutions. He believes in fostering strong connections and continually exploring new opportunities for growth and collaboration.
                 </p>
             </div>
         </div>
@@ -380,11 +383,11 @@
         // --- Configuration & Data ---
         // Defines the static data for the Portal Lite profile
         const profileData = {
-            name: "Chandra",
+            name: "chandra",
             profession: "DGM - Ashokleyland", // New profession field
             tagline: "Innovation distinguishes between a leader and a follower",
             phoneNumber: "+91 9840533766",
-            emailAddress: "Chandra@Ashokleyland.com",
+            emailAddress: "chandra@ashokleyland.com",
             linkedin: "https://linkedin.com/in/rajithraaj", // LinkedIn URL
         };
 
@@ -397,7 +400,7 @@
         const emailAddressSpan = document.getElementById('emailAddress');
         const aboutMeButton = document.getElementById('aboutMeButton'); // 'About Me' button
         const addToContactsBtn = document.getElementById('addToContacts');
-        // const shareProfileBtn = document.getElementById('shareProfile'); // Removed as per request
+        const shareProfileBtn = document.getElementById('shareProfile'); // Re-added share profile button
         const linkedInButton = document.querySelector('.action-button.secondary[href*="linkedin.com"]'); // Select LinkedIn button
         const toast = document.getElementById('toast');
 
@@ -500,16 +503,14 @@ END:VCARD`;
             showToast("Contact Saved!");
         });
 
-        // The 'Share Profile' button and its functionality are removed as requested.
-        // If you need to re-add it for other tiers, you can uncomment/re-implement the logic.
-        /*
+        // Event listener for 'Share Profile' button - RE-ADDED
         shareProfileBtn.addEventListener('click', async () => {
-            if (navigator.share) {
+            if (navigator.share) { // Check if Web Share API is supported by the browser
                 try {
                     await navigator.share({
                         title: `Portal Lite for ${profileData.name}`,
                         text: `Connect with ${profileData.name} via their Portal Lite:`,
-                        url: window.location.href
+                        url: window.location.href // Share the current page URL
                     });
                     showToast("Profile Shared Successfully!");
                 } catch (error) {
@@ -517,14 +518,15 @@ END:VCARD`;
                     showToast("Share failed or cancelled.");
                 }
             } else {
+                // Fallback to WhatsApp for sharing if Web Share API is not supported
                 const textToShare = `Check out my Portal Lite: ${window.location.href}`;
                 const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(textToShare)}`;
-                window.open(whatsappUrl, '_blank');
+                window.open(whatsappUrl, '_blank'); // Open WhatsApp in a new tab
                 showToast("Opening WhatsApp for sharing...");
             }
-            triggerHapticFeedback();
+            triggerHapticFeedback(); // Trigger haptic feedback on share attempt
         });
-        */
+
 
         // Event listener for 'About Me' button
         aboutMeButton.addEventListener('click', () => {
