@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Lite</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter (preferred for modern, clean look) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base styles for HTML and Body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #186060; /* Cyan Blue background (Dark Teal/Cyan) */
+            color: #E2E8F0; /* Light text color */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent scrolling if content overflows */
+            padding: 1rem; /* Overall padding for responsiveness */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Card container styles - simplified and modern */
+        .portal-card {
+            background-color: #2A8B92; /* Better card color (Medium Teal) */
+            border-radius: 1.5rem; /* Rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Subtle shadow */
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px; /* Max width for desktop, responsive otherwise */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative; /* Needed for absolute positioning of about section */
+            overflow: hidden; /* Keep content within card bounds */
+        }
+
+        /* Profile image styling */
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #00BCD4; /* Vibrant Cyan border */
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.7); /* Matching glow */
+            margin-bottom: 1.5rem;
+        }
+
+        /* Text styles */
+        .name {
+            font-size: 2.25rem; /* Larger name */
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 0.25rem; /* Reduced margin for profession text */
+            color: #FFFFFF; /* Pure white for name */
+        }
+
+        /* New: Profession text style */
+        .profession {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #E2E8F0; /* Slightly lighter than default text */
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #94A3B8; /* Muted gray for tagline */
+            margin-bottom: 2rem;
+        }
+
+        /* Contact Info */
+        .contact-info p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #CBD5E1; /* Lighter gray for contact info */
+        }
+        .contact-info p:last-child {
+            margin-bottom: 0;
+        }
+        .contact-info i {
+            color: #00BCD4; /* Cyan icons */
+        }
+        .contact-info span {
+            word-break: break-all; /* Ensures long emails/numbers wrap */
+            transition: color 0.2s ease;
+        }
+        .contact-info span:hover {
+            color: #4DD0E1; /* Lighter cyan on hover */
+            text-decoration: underline;
+        }
+
+        /* Action buttons - general style */
+        .action-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem; /* More space for icons and text */
+            font-weight: 600;
+            padding: 0.85rem 1.5rem; /* Default padding */
+            border-radius: 0.75rem; /* More rounded buttons */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-decoration: none; /* Ensure links don't have underlines by default */
+        }
+
+        /* Primary action button (now 'About Me') */
+        .action-button.primary {
+            background-color: #00BCD4; /* Cyan background */
+            color: #FFFFFF; /* White text */
+            box-shadow: 0 6px 15px rgba(0, 188, 212, 0.4);
+            margin-bottom: 1.25rem; /* Space below primary button */
+        }
+        .action-button.primary:hover {
+            background-color: #0097A7; /* Darker cyan on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.6);
+        }
+
+        /* Secondary action buttons (Add to Contacts, LinkedIn) */
+        .action-button.secondary {
+            background-color: #475569; /* Slate gray background */
+            color: #E2E8F0; /* Light text */
+        }
+        .action-button.secondary:hover {
+            background-color: #64748B; /* Lighter slate gray on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Specific style for the "med-short" button (About Me) */
+        .action-button.med-short {
+            padding: 0.6rem 1.2rem; /* Medium-short padding */
+            font-size: 0.95rem; /* Slightly smaller font for shorter button */
+            max-width: fit-content; /* Make button fit content */
+            align-self: center; /* Center the button if max-width is applied */
+        }
+
+
+        /* Watermark */
+        .watermark {
+            margin-top: 2rem;
+            font-size: 14px; /* Increased watermark size */
+            color: #64748B; /* Muted gray for watermark */
+            text-align: center;
+        }
+        .watermark a {
+            color: #4DD0E1; /* Lighter cyan for link */
+            text-decoration: none;
+        }
+        .watermark a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast Message */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px); /* Start slightly below */
+            background-color: #00BCD4; /* Cyan toast */
+            color: #FFFFFF;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded pill shape */
+            font-weight: 600;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.5);
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0); /* Move up to final position */
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #186060; /* Match body background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-out;
+        }
+        .loader {
+            width: 70px; /* Slightly larger loader */
+            height: 70px;
+            border: 7px solid rgba(0, 188, 212, 0.2); /* Light cyan base */
+            border-top: 7px solid #00BCD4; /* Vibrant cyan spinning part */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* About Me Section specific styles */
+        .about-section {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #2A8B92; /* Match card background */
+            border-radius: 1.5rem;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden; /* Start hidden for smoother transition */
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            overflow-y: auto; /* Allow scrolling for content */
+        }
+
+        .about-section.show {
+            opacity: 1;
+            visibility: visible; /* Show when 'show' class is added */
+            pointer-events: auto;
+        }
+
+        .about-section .back-button {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: none;
+            border: none;
+            color: #E2E8F0;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s ease;
+        }
+        .about-section .back-button:hover {
+            color: #FFFFFF;
+        }
+
+        .about-content {
+            margin-top: 3rem; /* Space for the back button */
+            flex-grow: 1; /* Allows content to take available space */
+            overflow-y: auto; /* Ensures content within about section is scrollable */
+            padding-right: 0.5rem; /* For scrollbar space */
+            text-align: left; /* Align about me text to left */
+            line-height: 1.6;
+        }
+
+        .about-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .about-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .about-content::-webkit-scrollbar-thumb {
+            background: #00BCD4; /* Cyan scrollbar */
+            border-radius: 10px;
+        }
+
+        /* Ensure mainContent also transitions smoothly */
+        #mainContent {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            visibility: visible; /* Default state */
+        }
+
+        @media (max-width: 640px) {
+            .portal-card {
+                padding: 1.5rem;
+            }
+            .name {
+                font-size: 2rem;
+            }
+            .tagline {
+                font-size: 1rem;
+            }
+            .about-section {
+                padding: 1.5rem;
+            }
+            .about-section .back-button {
+                top: 1rem;
+                left: 1rem;
+            }
+            .about-content {
+                margin-top: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Main Portal Lite Card -->
+    <div class="portal-card" id="portalCard">
+        <!-- Main profile content container -->
+        <div id="mainContent" class="flex flex-col items-center w-full">
+            <!-- Profile Picture -->
+            <img src="https://i.ibb.co/ZR0d1xTz/Gemini-Generated-Image-b0k237b0k237b0k2.png" alt="Profile Picture" class="profile-img">
+
+            <!-- Name & Profession -->
+            <h1 class="name" id="profileName">Chandra</h1>
+            <p class="profession" id="professionText">DGM - Ashokleyland</p>
+            <p class="tagline" id="profileTagline">Innovation distinguishes between a leader and a follower</p>
+            
+            <!-- Contact Information -->
+            <div class="contact-info w-full mb-6">
+                <p><i class="fas fa-phone"></i> <span id="phoneNumber" class="cursor-pointer">+91 9840533766</span></p>
+                <p><i class="fas fa-envelope"></i> <span id="emailAddress" class="cursor-pointer">Chandra@ashokleyland.com</span></p>
+            </div>
+            
+            <!-- Main Action Buttons -->
+            <div class="flex flex-col gap-3 w-full">
+                <!-- About Me button (now primary and med-short) -->
+                <button class="action-button primary med-short" id="aboutMeButton">
+                    <i class="fas fa-info-circle"></i> About Me
+                </button>
+                <!-- LinkedIn Widget / Button -->
+                 <a href="https://linkedin.com/in/rajithraaj" target="_blank" rel="noopener noreferrer" class="action-button secondary">
+                    <i class="fab fa-linkedin"></i> Connect on LinkedIn
+                </a>
+                <button class="action-button secondary" id="addToContacts">
+                    <i class="fas fa-address-book"></i> Add to Contacts
+                </button>
+                <!-- Share Profile button removed as requested for Portal Lite -->
+            </div>
+        </div>
+
+        <!-- About Me Section (initially hidden) -->
+        <div class="about-section" id="aboutSection">
+            <button class="back-button" id="backButtonFromAbout">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h2 class="text-2xl font-bold mt-12 mb-4 text-white">About Chandra</h2>
+            <div class="about-content w-full px-4 text-gray-300">
+                <p class="mb-4">
+                    Chandra is a seasoned professional currently serving as DGM at Ashokleyland, bringing extensive experience in leadership and operational excellence. With a strong track record in the automotive industry, he is dedicated to driving innovation and achieving strategic objectives.
+                </p>
+                <p>
+                    Beyond his professional endeavors, Chandra is passionate about leveraging technology for practical solutions. He believes in fostering strong connections and continually exploring new opportunities for growth and collaboration.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Watermark -->
+    <p class="watermark">
+        Portal Lite | <a href="https://zenora-ai.vercel.app/" target="_blank" rel="noopener noreferrer">ZENORA AI ©</a>
+    </p>
+
+    <!-- Toast Notification Element -->
+    <div id="toast"></div>
+
+    <script>
+        // --- Configuration & Data ---
+        // Defines the static data for the Portal Lite profile
+        const profileData = {
+            name: "Chandra",
+            profession: "DGM - Ashokleyland", // New profession field
+            tagline: "Basic Online Profile & One Link",
+            phoneNumber: "+91 9840028788",
+            emailAddress: "Chandra@carrywings.com",
+            linkedin: "https://linkedin.com/in/rajithraaj", // LinkedIn URL
+        };
+
+        // --- DOM Elements ---
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const profileName = document.getElementById('profileName');
+        const professionText = document.getElementById('professionText'); // New profession element
+        const tagline = document.getElementById('profileTagline');
+        const phoneNumberSpan = document.getElementById('phoneNumber');
+        const emailAddressSpan = document.getElementById('emailAddress');
+        const aboutMeButton = document.getElementById('aboutMeButton'); // 'About Me' button
+        const addToContactsBtn = document.getElementById('addToContacts');
+        // const shareProfileBtn = document.getElementById('shareProfile'); // Removed as per request
+        const linkedInButton = document.querySelector('.action-button.secondary[href*="linkedin.com"]'); // Select LinkedIn button
+        const toast = document.getElementById('toast');
+
+        const portalCard = document.getElementById('portalCard');
+        const mainContent = document.getElementById('mainContent');
+        const aboutSection = document.getElementById('aboutSection');
+        const backButtonFromAbout = document.getElementById('backButtonFromAbout');
+
+
+        // --- Utility Functions ---
+        /**
+         * Displays a temporary toast notification.
+         * @param {string} message - The message to display.
+         */
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+            triggerHapticFeedback(); // Trigger haptic feedback when toast appears
+        }
+
+        /**
+         * Triggers a short vibration if the device supports it (for haptic feedback).
+         */
+        function triggerHapticFeedback() {
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(50); // Vibrate for 50ms
+            }
+        }
+
+        /**
+         * Copies text to the clipboard.
+         * Uses document.execCommand('copy') for broader compatibility in iframes.
+         * @param {string} text - The text to copy.
+         */
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed'; // Prevents scrolling to the bottom
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Copied!");
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                showToast("Failed to copy.");
+            } finally {
+                document.body.removeChild(textarea); // Always remove the temporary textarea
+            }
+        }
+
+        // --- Event Listeners ---
+        // Initial loading sequence for the overlay
+        window.addEventListener('load', () => {
+            // Simulate a slight delay for loading experience
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0'; // Fade out loading overlay
+                // After fade out, set display to none to remove from layout
+                setTimeout(() => loadingOverlay.style.display = 'none', 500);
+            }, 1000); // Wait 1 second before fading out
+        });
+
+        // Event listener to copy phone number when clicked
+        phoneNumberSpan.addEventListener('click', () => {
+            copyToClipboard(profileData.phoneNumber.trim());
+        });
+
+        // Event listener to copy email address when clicked
+        emailAddressSpan.addEventListener('click', () => {
+            copyToClipboard(profileData.emailAddress.trim());
+        });
+
+        // Event listener for 'Add to Contacts' button
+        addToContactsBtn.addEventListener('click', () => {
+            // Construct vCard content using the static profileData
+            const vCardContent = `BEGIN:VCARD
+VERSION:3.0
+FN:${profileData.name}
+TITLE:${profileData.profession}
+TEL:${profileData.phoneNumber}
+EMAIL:${profileData.emailAddress}
+URL:${profileData.linkedin || ''}
+END:VCARD`;
+            const blob = new Blob([vCardContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob); // Create a URL for the Blob
+
+            const a = document.createElement('a'); // Create a temporary anchor element
+            a.href = url;
+            // Set download filename for the vCard
+            a.download = `${profileData.name.replace(/\s/g, '_')}_PortalLite.vcf`;
+            document.body.appendChild(a);
+            a.click(); // Programmatically click the link to trigger download
+            document.body.removeChild(a); // Clean up the temporary link
+            URL.revokeObjectURL(url); // Release the object URL
+            showToast("Contact Saved!");
+        });
+
+        // The 'Share Profile' button and its functionality are removed as requested.
+        // If you need to re-add it for other tiers, you can uncomment/re-implement the logic.
+        /*
+        shareProfileBtn.addEventListener('click', async () => {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `Portal Lite for ${profileData.name}`,
+                        text: `Connect with ${profileData.name} via their Portal Lite:`,
+                        url: window.location.href
+                    });
+                    showToast("Profile Shared Successfully!");
+                } catch (error) {
+                    console.error('Error sharing:', error);
+                    showToast("Share failed or cancelled.");
+                }
+            } else {
+                const textToShare = `Check out my Portal Lite: ${window.location.href}`;
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(textToShare)}`;
+                window.open(whatsappUrl, '_blank');
+                showToast("Opening WhatsApp for sharing...");
+            }
+            triggerHapticFeedback();
+        });
+        */
+
+        // Event listener for 'About Me' button
+        aboutMeButton.addEventListener('click', () => {
+            // Hide main content and show about section with smoother transition
+            mainContent.style.opacity = '0';
+            mainContent.style.pointerEvents = 'none'; // Disable interactions on main content immediately
+
+            setTimeout(() => {
+                mainContent.style.visibility = 'hidden'; // Hide main content after it's fully faded out
+                aboutSection.style.visibility = 'visible'; // Make about section visible
+                aboutSection.classList.add('show'); // Trigger fade-in for about section
+            }, 300); // This timeout should match the CSS opacity transition duration
+        });
+
+        // Event listener for 'Back' button in About Me section
+        backButtonFromAbout.addEventListener('click', () => {
+            // Hide about section and show main content with smoother transition
+            aboutSection.classList.remove('show'); // Trigger fade-out for about section
+            aboutSection.style.pointerEvents = 'none'; // Disable interactions on about section immediately
+
+            setTimeout(() => {
+                aboutSection.style.visibility = 'hidden'; // Hide about section after it's fully faded out
+                mainContent.style.visibility = 'visible'; // Make main content visible
+                mainContent.style.opacity = '1'; // Trigger fade-in for main content
+                mainContent.style.pointerEvents = 'auto'; // Re-enable interactions on main content
+            }, 300); // This timeout should match the CSS opacity transition duration
+        });
+
+        // --- Initial Data Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update static content with data from profileData
+            profileName.textContent = profileData.name;
+            professionText.textContent = profileData.profession; // Set profession text
+            tagline.textContent = profileData.tagline;
+            phoneNumberSpan.textContent = profileData.phoneNumber;
+            emailAddressSpan.textContent = profileData.emailAddress;
+
+            // Hide loading overlay after initial load and setup
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 500); // Hide after transition
+            }, 1000); // Simulate 1 second loading time
+        });
+    </script>
+</body>
+</html>
